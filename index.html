@@ -1,28 +1,35 @@
-// pages/index.js
-import Link from 'next/link';
-import Head from 'next/head';
-import Layout from '../components/Layout';
-
-export default function Home() {
-  return (
-    <Layout>
-      <Head>
-        <title>雲端訃聞網站</title>
-      </Head>
-      <main className="bg-gray-100 p-10 min-h-screen">
-        <h1 className="text-4xl font-bold mb-8 text-center">歡迎使用雲端訃聞網站</h1>
-        <div className="flex justify-around">
-          <Link href="/create">
-            <a className="btn btn-primary">生成訃聞</a>
-          </Link>
-          <Link href="/order-flowers">
-            <a className="btn btn-primary">訂購花籃</a>
-          </Link>
-          <Link href="/admin">
-            <a className="btn btn-primary">後台管理</a>
-          </Link>
-        </div>
-      </main>
-    </Layout>
-  );
-}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雲端訃聞平台</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>雲端訃聞平台</h1>
+        <nav>
+            <ul>
+                <li><a href="/">首頁</a></li>
+                <li><a href="/submit-obituary.html">提交訃聞</a></li>
+                <li><a href="/order-flowers.html">訂購花籃</a></li>
+                <li><a href="/admin.html">後台管理</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>最近的訃聞</h2>
+            <!-- 這裡可以插入最近訃聞的列表 -->
+        </section>
+        <section>
+            <h2>訂購花籃</h2>
+            <a href="/order-flowers.html" class="btn">立即訂購花籃</a>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 雲端訃聞平台</p>
+    </footer>
+</body>
+</html>
