@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂購花籃</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>訂購花籃</h1>
+        <nav>
+            <ul>
+                <li><a href="/">首頁</a></li>
+                <li><a href="/submit-obituary.html">提交訃聞</a></li>
+                <li><a href="/admin.html">後台管理</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <p>請在下方選擇您希望訂購的花籃樣式。</p>
+        <!-- 花籃訂購表單或選項 -->
+        <form action="/order-flowers" method="post">
+            <label for="flower-type">花籃樣式:</label>
+            <select id="flower-type" name="flowerType" required>
+                <option value="basic">基本花籃</option>
+                <option value="deluxe">豪華花籃</option>
+            </select>
+            
+            <label for="recipient">收花人姓名:</label>
+            <input type="text" id="recipient" name="recipient" required>
+            
+            <label for="message">留言:</label>
+            <textarea id="message" name="message" rows="4"></textarea>
+            
+            <button type="submit" class="btn">訂購</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 雲端訃聞平台</p>
+    </footer>
+</body>
+</html>
