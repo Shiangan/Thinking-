@@ -1,0 +1,55 @@
+// pages/order-flowers.js
+import { useState } from 'react';
+import Layout from '../components/Layout';
+
+export default function OrderFlowers() {
+  const [form, setForm] = useState({ recipient: '', deliveryDate: '', address: '', message: '', flowers: [] });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // 提交表單邏輯
+    await fetch('/api/order-flowers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(form),
+    });
+    alert('訂單已提交');
+  };
+
+  return (
+    <Layout>
+      <main className="bg-gray-100 p-10 min-h-screen">
+        <h1 className="text-4xl font-bold mb-8 text-center">訂購花籃</h1>
+        <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
+          <div className="mb-4">
+            <label className="block text-gray-700">收花人</label>
+            <input type="text" className="form-input mt-1 block w-full" value={form.recipient} onChange={(e) => setForm({ ...form, recipient: e.target.value })} />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">送花日期</label>
+            <input type="date" className="form-input mt-1 block w-full" value={form.deliveryDate} onChange={(e) => setForm({ ...form, deliveryDate: e.target.value })} />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">送花地址</label>
+            <input type="text" className="form-input mt-1 block w-full" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">留言</label>
+            <textarea className="form-textarea mt-1 block w-full" rows="3" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}></textarea>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">選擇花籃</label>
+            <select multiple className="form-select mt-1 block w-full" value={form.flowers} onChange={(e) => setForm({ ...form, flowers: Array.from(e.target.selectedOptions, option => option.value) })}>
+              <option value="flower1">花籃一</option>
+              <option value="flower2">花籃二</option>
+              <option value="flower3">花籃三</option>
+            </select>
+          </div>
+          <button type="submit" className="btn btn-primary mt-4">提交訂單</button>
+        </form>
+      </main>
+    </Layout>
+  );
+}
