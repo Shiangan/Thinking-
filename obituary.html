@@ -1,0 +1,64 @@
+// pages/obituary/[id].js
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import Layout from '../../components/Layout';
+
+export default function Obituary() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [obituary, setObituary] = useState(null);
+
+  useEffect(() => {
+    if (id) {
+      fetch(`/api/obituary/${id}`)
+        .then(res => res.json())
+        .then(data => setObituary(data));
+    }
+  }, [id]);
+
+  if (!obituary) return <p>Loading...</p>;
+
+  return (
+    <Layout>
+      <main className="bg-gray-100 p-10 min-h-screen">
+        <h1 className="text-4xl font-bold mb-8 text-center">{obituary.name}的訃聞</h1>
+        <div className="max-w-3xl mx-auto bg-white p-8 shadow-md">
+          <div className="mb-4 text-center">
+            <img src={obituary.mainPhoto} alt={`${obituary.name}的照片`} className="mx-auto" />
+            <p className="text-gray-700 mt-2">{obituary.birthDate} - {obituary.deathDate}</p>
+            <p className="text-gray-700">{obituary.age} 歲</p>
+          </div>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold mb-2">訃聞內容</h2>
+            <p className="text-gray-700">{obituary.content}</p>
+          </div>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold mb-2">照片集錦</h2>
+            <div className="grid grid-cols-3 gap-4">
+              {obituary.photos.map((photo, index) => (
+                <img key={index} src={photo} alt={`照片 ${index + 1}`} className="w-full h-full object-cover" />
+              ))}
+            </div>
+          </div>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold mb-2">時間軸</h2>
+            <ul className="timeline">
+              {obituary.timeline.map((event, index) => (
+                <li key={index} className="mb-4">
+                  <span className="text-gray-700">{event.date}</span> - <span className="text-gray-700">{event.description}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mb-4">
+            <a href="/order-flowers" className="btn btn-primary">訂購花籃</a>
+          </div>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold mb-2">留言板</h2>
+            {/* 留言功能待實現 */}
+          </div>
+        </div>
+      </main>
+    </Layout>
+  );
+}
