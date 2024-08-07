@@ -1,0 +1,57 @@
+// pages/create.js
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import Layout from '../components/Layout';
+
+export default function Create() {
+  const [form, setForm] = useState({ name: '', birthDate: '', deathDate: '', age: '', content: '', photos: [] });
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // 提交表單邏輯
+    await fetch('/api/obituary', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(form),
+    });
+    router.push('/obituary/[id]');
+  };
+
+  return (
+    <Layout>
+      <main className="bg-gray-100 p-10 min-h-screen">
+        <h1 className="text-4xl font-bold mb-8 text-center">生成訃聞</h1>
+        <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
+          <div className="mb-4">
+            <label className="block text-gray-700">姓名</label>
+            <input type="text" className="form-input mt-1 block w-full" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">出生日期</label>
+            <input type="date" className="form-input mt-1 block w-full" value={form.birthDate} onChange={(e) => setForm({ ...form, birthDate: e.target.value })} />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">死亡日期</label>
+            <input type="date" className="form-input mt-1 block w-full" value={form.deathDate} onChange={(e) => setForm({ ...form, deathDate: e.target.value })} />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">年齡</label>
+            <input type="number" className="form-input mt-1 block w-full" value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">訃聞內容</label>
+            <textarea className="form-textarea mt-1 block w-full" rows="3" value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })}></textarea>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">照片上傳</label>
+            <input type="file" className="form-input mt-1 block w-full" onChange={(e) => setForm({ ...form, photos: [...form.photos, ...e.target.files] })} multiple />
+          </div>
+          <button type="submit" className="btn btn-primary mt-4">提交</button>
+        </form>
+      </main>
+    </Layout>
+  );
+}
