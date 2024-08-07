@@ -1,0 +1,80 @@
+// pages/admin.js
+import { useEffect, useState } from 'react';
+import Layout from '../components/Layout';
+
+export default function Admin() {
+  const [obituaries, setObituaries] = useState([]);
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    // 獲取訃聞列表
+    fetch('/api/obituaries')
+      .then(res => res.json())
+      .then(data => setObituaries(data));
+
+    // 獲取訂單列表
+    fetch('/api/orders')
+      .then(res => res.json())
+      .then(data => setOrders(data));
+  }, []);
+
+  return (
+    <Layout>
+      <main className="bg-gray-100 p-10 min-h-screen">
+        <h1 className="text-4xl font-bold mb-8 text-center">後台管理</h1>
+        <section>
+          <h2 className="text-2xl font-bold mb-4">訃聞管理</h2>
+          <table className="min-w-full bg-white">
+            <thead>
+              <tr>
+                <th className="py-2">姓名</th>
+                <th className="py-2">出生日期</th>
+                <th className="py-2">死亡日期</th>
+                <th className="py-2">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {obituaries.map((obituary, index) => (
+                <tr key={index}>
+                  <td className="border px-4 py-2">{obituary.name}</td>
+                  <td className="border px-4 py-2">{obituary.birthDate}</td>
+                  <td className="border px-4 py-2">{obituary.deathDate}</td>
+                  <td className="border px-4 py-2">
+                    <button className="btn btn-secondary mr-2">編輯</button>
+                    <button className="btn btn-danger">刪除</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+        <section className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">訂單管理</h2>
+          <table className="min-w-full bg-white">
+            <thead>
+              <tr>
+                <th className="py-2">收花人</th>
+                <th className="py-2">送花日期</th>
+                <th className="py-2">地址</th>
+                <th className="py-2">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order, index) => (
+                <tr key={index}>
+                  <td className="border px-4 py-2">{order.recipient}</td>
+                  <td className="border px-4 py-2">{order.deliveryDate}</td>
+                  <td className="border px-4 py-2">{order.address}</td>
+                  <td className="border px-4 py-2">
+                    <button className="btn btn-secondary mr-2">查看</button>
+                    <button className="btn btn-danger">刪除</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </Layout>
+  );
+}
