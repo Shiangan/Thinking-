@@ -1,64 +1,200 @@
-// pages/obituary/[id].js
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import Layout from '../../components/Layout';
-
-export default function Obituary() {
-  const router = useRouter();
-  const { id } = router.query;
-  const [obituary, setObituary] = useState(null);
-
-  useEffect(() => {
-    if (id) {
-      fetch(`/api/obituary/${id}`)
-        .then(res => res.json())
-        .then(data => setObituary(data));
-    }
-  }, [id]);
-
-  if (!obituary) return <p>Loading...</p>;
-
-  return (
-    <Layout>
-      <main className="bg-gray-100 p-10 min-h-screen">
-        <h1 className="text-4xl font-bold mb-8 text-center">{obituary.name}的訃聞</h1>
-        <div className="max-w-3xl mx-auto bg-white p-8 shadow-md">
-          <div className="mb-4 text-center">
-            <img src={obituary.mainPhoto} alt={`${obituary.name}的照片`} className="mx-auto" />
-            <p className="text-gray-700 mt-2">{obituary.birthDate} - {obituary.deathDate}</p>
-            <p className="text-gray-700">{obituary.age} 歲</p>
-          </div>
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold mb-2">訃聞內容</h2>
-            <p className="text-gray-700">{obituary.content}</p>
-          </div>
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold mb-2">照片集錦</h2>
-            <div className="grid grid-cols-3 gap-4">
-              {obituary.photos.map((photo, index) => (
-                <img key={index} src={photo} alt={`照片 ${index + 1}`} className="w-full h-full object-cover" />
-              ))}
-            </div>
-          </div>
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold mb-2">時間軸</h2>
-            <ul className="timeline">
-              {obituary.timeline.map((event, index) => (
-                <li key={index} className="mb-4">
-                  <span className="text-gray-700">{event.date}</span> - <span className="text-gray-700">{event.description}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="mb-4">
-            <a href="/order-flowers" className="btn btn-primary">訂購花籃</a>
-          </div>
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold mb-2">留言板</h2>
-            {/* 留言功能待實現 */}
-          </div>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訃聞詳細頁</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery.js/2.0.0/css/lightgallery.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #333;
+        }
+        .photo-carousel {
+            margin: 20px 0;
+        }
+        .photo-carousel img {
+            width: 100%;
+            height: auto;
+        }
+        .donation-link {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .donation-link a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .donation-link a:hover {
+            background-color: #0056b3;
+        }
+        .comments {
+            margin: 20px 0;
+        }
+        .comments h2 {
+            margin-bottom: 10px;
+        }
+        .comments ul {
+            list-style: none;
+            padding: 0;
+        }
+        .comments ul li {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        .comments form input,
+        .comments form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .comments form button {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .comments form button:hover {
+            background-color: #0056b3;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+        }
+        .image-container {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>訃聞詳細</h1>
         </div>
-      </main>
-    </Layout>
-  );
-}
+        <div id="obituaryDetails">
+            <!-- 從 index.html 提交過來的訃聞內容 -->
+            <p id="name"></p>
+            <p id="dateOfBirth"></p>
+            <p id="dateOfDeath"></p>
+            <p id="bio"></p>
+        </div>
+        <div id="photoCarousel" class="photo-carousel">
+            <!-- 追思照片輪播 -->
+        </div>
+        <div class="image-container">
+            <h2>安靈地點</h2>
+            <img id="burialLocationImg" src="" alt="安靈地點圖片">
+        </div>
+        <div class="image-container">
+            <h2>告別式地點</h2>
+            <img id="farewellLocationImg" src="" alt="告別式地點圖片">
+        </div>
+        <div class="donation-link">
+            <a href="line://msg/text/致贈花籃請點選" target="_blank">致贈花籃請點選</a>
+        </div>
+        <div class="comments">
+            <h2>追思留言</h2>
+            <ul id="commentsList">
+                <!-- 顯示留言 -->
+            </ul>
+            <form id="commentForm">
+                <input type="text" id="commentName" name="name" placeholder="您的姓名" required>
+                <textarea id="commentContent" name="content" placeholder="您的留言內容" required></textarea>
+                <button type="submit">提交留言</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery.js/2.0.0/lightgallery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery.js/2.0.0/plugins/thumbnail/lg-thumbnail.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery.js/2.0.0/plugins/fullscreen/lg-fullscreen.min.js"></script>
+    <script>
+        // 解析 URL 參數
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name');
+        const dateOfBirth = urlParams.get('dateOfBirth');
+        const dateOfDeath = urlParams.get('dateOfDeath');
+        const bio = urlParams.get('bio');
+        const burialLocation = urlParams.get('burialLocation');
+        const farewellLocation = urlParams.get('farewellLocation');
+        const photos = urlParams.getAll('photos');
+
+        // 填充訃聞內容
+        document.getElementById('name').innerText = `亡者姓名: ${name}`;
+        document.getElementById('dateOfBirth').innerText = `出生日期: ${dateOfBirth}`;
+        document.getElementById('dateOfDeath').innerText = `過世日期: ${dateOfDeath}`;
+        document.getElementById('bio').innerText = `生平介紹: ${bio}`;
+
+        // 設置圖片
+        if (burialLocation) {
+            document.getElementById('burialLocationImg').src = burialLocation;
+        }
+        if (farewellLocation) {
+            document.getElementById('farewellLocationImg').src = farewellLocation;
+        }
+
+        // 設置照片輪播
+        const photoCarousel = document.getElementById('photoCarousel');
+        if (photos.length > 0) {
+            photos.forEach(photo => {
+                const img = document.createElement('img');
+                img.src = photo;
+                photoCarousel.appendChild(img);
+            });
+
+            lightGallery(photoCarousel, {
+                selector: 'img',
+                plugins: [lgThumbnail, lgFullscreen],
+                thumbnail: true,
+                fullScreen: true
+            });
+        }
+
+        // 提交留言
+        document.getElementById('commentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('commentName').value;
+            const content = document.getElementById('commentContent').value;
+
+            const li = document.createElement('li');
+            li.innerHTML = `<strong>${name}:</strong> ${content}`;
+            document.getElementById('commentsList').appendChild(li);
+
+            // 清除表單
+            document.getElementById('commentName').value = '';
+            document.getElementById('commentContent').value = '';
+        });
+    </script>
+</body>
+</html>
