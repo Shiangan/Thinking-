@@ -14,19 +14,23 @@ $uploadedFiles = [];
 
 // 处理文件上传
 foreach ($_FILES as $key => $file) {
-    // 检查文件上传是否成功
     if ($file['error'] === UPLOAD_ERR_OK) {
         // 生成唯一文件名以避免覆盖
         $uploadFile = $uploadDir . uniqid() . '-' . basename($file['name']);
 
         // 移动文件到目标目录
         if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
-            $uploadedFiles[$key] = $uploadFile;
+            // 处理多个文件的情况
+            if ($key === 'photos') {
+                // 将多个文件路径以逗号分隔的形式保存
+                $uploadedFiles[$key] = implode(',', array_map('basename', $_FILES['photos']['name']));
+            } else {
+                $uploadedFiles[$key] = $uploadFile;
+            }
         } else {
             $uploadedFiles[$key] = '文件上传失败: ' . htmlspecialchars($file['name']);
         }
     } else {
-        // 上传错误
         $uploadedFiles[$key] = '上传错误: ' . $file['error'];
     }
 }
@@ -35,7 +39,7 @@ foreach ($_FILES as $key => $file) {
 $queryParams = http_build_query([
     'burialLocation' => $uploadedFiles['burialLocation'] ?? '',
     'farewellLocation' => $uploadedFiles['farewellLocation'] ?? '',
-    'photos' => isset($uploadedFiles['photos']) ? implode(',', array_values($uploadedFiles['photos'])) : '',
+    'photos' => $uploadedFiles['photos'] ?? '',
     'music' => $uploadedFiles['music'] ?? '',
 ]);
 
