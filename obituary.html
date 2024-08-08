@@ -95,6 +95,18 @@
         .image-container {
             margin: 20px 0;
         }
+        .background-music {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .background-music audio {
+            width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -136,65 +148,70 @@
         </div>
     </div>
 
+    <div class="background-music">
+        <audio controls>
+            <source id="musicSource" src="" type="audio/mpeg">
+            您的瀏覽器不支援音頻播放。
+        </audio>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery.js/2.0.0/lightgallery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery.js/2.0.0/plugins/thumbnail/lg-thumbnail.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery.js/2.0.0/plugins/fullscreen/lg-fullscreen.min.js"></script>
     <script>
         // 解析 URL 參數
+        const urlParams = new URLSearchParams(window.location.search);        // 解析 URL 參數
         const urlParams = new URLSearchParams(window.location.search);
-        const name = urlParams.get('name');
-        const dateOfBirth = urlParams.get('dateOfBirth');
-        const dateOfDeath = urlParams.get('dateOfDeath');
-        const bio = urlParams.get('bio');
-        const burialLocation = urlParams.get('burialLocation');
-        const farewellLocation = urlParams.get('farewellLocation');
-        const photos = urlParams.getAll('photos');
 
-        // 填充訃聞內容
-        document.getElementById('name').innerText = `亡者姓名: ${name}`;
-        document.getElementById('dateOfBirth').innerText = `出生日期: ${dateOfBirth}`;
-        document.getElementById('dateOfDeath').innerText = `過世日期: ${dateOfDeath}`;
-        document.getElementById('bio').innerText = `生平介紹: ${bio}`;
+        // 設置訃聞詳細資訊
+        document.getElementById('name').textContent = '亡者姓名: ' + urlParams.get('name');
+        document.getElementById('dateOfBirth').textContent = '出生日期: ' + urlParams.get('dateOfBirth');
+        document.getElementById('dateOfDeath').textContent = '過世日期: ' + urlParams.get('dateOfDeath');
+        document.getElementById('bio').textContent = '生平介紹: ' + urlParams.get('bio');
 
-        // 設置圖片
-        if (burialLocation) {
-            document.getElementById('burialLocationImg').src = burialLocation;
-        }
-        if (farewellLocation) {
-            document.getElementById('farewellLocationImg').src = farewellLocation;
-        }
+        // 設置安靈地點和告別式地點圖片
+        const burialLocationImg = document.getElementById('burialLocationImg');
+        burialLocationImg.src = URL.createObjectURL(urlParams.get('burialLocation'));
 
-        // 設置照片輪播
+        const farewellLocationImg = document.getElementById('farewellLocationImg');
+        farewellLocationImg.src = URL.createObjectURL(urlParams.get('farewellLocation'));
+
+        // 設置追思照片輪播
         const photoCarousel = document.getElementById('photoCarousel');
-        if (photos.length > 0) {
+        const photos = urlParams.getAll('photos');
+        if (photos.length) {
             photos.forEach(photo => {
                 const img = document.createElement('img');
-                img.src = photo;
+                img.src = URL.createObjectURL(photo);
                 photoCarousel.appendChild(img);
             });
-
             lightGallery(photoCarousel, {
                 selector: 'img',
-                plugins: [lgThumbnail, lgFullscreen],
                 thumbnail: true,
-                fullScreen: true
+                fullscreen: true,
             });
         }
 
-        // 提交留言
-        document.getElementById('commentForm').addEventListener('submit', function(event) {
+        // 設置背景音樂
+        const musicSource = document.getElementById('musicSource');
+        musicSource.src = URL.createObjectURL(urlParams.get('music'));
+
+        // 留言區功能
+        const commentForm = document.getElementById('commentForm');
+        const commentsList = document.getElementById('commentsList');
+
+        commentForm.addEventListener('submit', function(event) {
             event.preventDefault();
             const name = document.getElementById('commentName').value;
             const content = document.getElementById('commentContent').value;
 
             const li = document.createElement('li');
-            li.innerHTML = `<strong>${name}:</strong> ${content}`;
-            document.getElementById('commentsList').appendChild(li);
+            li.textContent = `姓名: ${name} - 留言內容: ${content}`;
+            commentsList.appendChild(li);
 
-            // 清除表單
-            document.getElementById('commentName').value = '';
-            document.getElementById('commentContent').value = '';
+            commentForm.reset();
         });
     </script>
 </body>
 </html>
+       
