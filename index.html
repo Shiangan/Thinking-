@@ -59,8 +59,8 @@
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
-            text-align: center;
             border: none;
+            text-align: center;
             cursor: pointer;
         }
         .submit-btn:hover {
@@ -114,13 +114,13 @@
             event.preventDefault();
             const formData = new FormData(this);
 
-            // Handle file uploads
-            fetch('upload.php', { // Replace with your server-side upload handler
+            // 處理檔案上傳
+            fetch('upload.php', { // 替換為伺服器端上傳處理程式
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
               .then(data => {
-                  // Assume data contains the URLs for uploaded files
+                  // 假設資料包含上傳檔案的URL
                   const queryParams = new URLSearchParams(data).toString();
                   window.location.href = `obituary.html?${queryParams}`;
               });
