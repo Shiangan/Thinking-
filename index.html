@@ -122,7 +122,7 @@
               .then(data => {
                   // 假設資料包含上傳檔案的URL
                   const queryParams = new URLSearchParams(data).toString();
-                  window.location.href = `obituary.html?${queryParams}`;
+                  window.location.href = `obituary.html${queryParams}`;
               });
         });
     </script>
