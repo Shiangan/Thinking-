@@ -73,24 +73,17 @@
         .comments form textarea {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
         }
         .comments form button {
-            padding: 10px;
             background-color: #007bff;
             color: #fff;
             border: none;
             border-radius: 5px;
+            padding: 10px;
             cursor: pointer;
         }
         .comments form button:hover {
             background-color: #0056b3;
-        }
-        .image-container img {
-            max-width: 100%;
-            height: auto;
         }
         .image-container {
             margin: 20px 0;
@@ -160,7 +153,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery.js/2.0.0/plugins/fullscreen/lg-fullscreen.min.js"></script>
     <script>
         // 解析 URL 參數
-        const urlParams = new URLSearchParams(window.location.search);        // 解析 URL 參數
         const urlParams = new URLSearchParams(window.location.search);
 
         // 設置訃聞詳細資訊
@@ -171,10 +163,10 @@
 
         // 設置安靈地點和告別式地點圖片
         const burialLocationImg = document.getElementById('burialLocationImg');
-        burialLocationImg.src = URL.createObjectURL(urlParams.get('burialLocation'));
+        burialLocationImg.src = urlParams.get('burialLocation');
 
         const farewellLocationImg = document.getElementById('farewellLocationImg');
-        farewellLocationImg.src = URL.createObjectURL(urlParams.get('farewellLocation'));
+        farewellLocationImg.src = urlParams.get('farewellLocation');
 
         // 設置追思照片輪播
         const photoCarousel = document.getElementById('photoCarousel');
@@ -182,7 +174,7 @@
         if (photos.length) {
             photos.forEach(photo => {
                 const img = document.createElement('img');
-                img.src = URL.createObjectURL(photo);
+                img.src = photo;
                 photoCarousel.appendChild(img);
             });
             lightGallery(photoCarousel, {
@@ -194,7 +186,7 @@
 
         // 設置背景音樂
         const musicSource = document.getElementById('musicSource');
-        musicSource.src = URL.createObjectURL(urlParams.get('music'));
+        musicSource.src = urlParams.get('music');
 
         // 留言區功能
         const commentForm = document.getElementById('commentForm');
@@ -214,4 +206,3 @@
     </script>
 </body>
 </html>
-       
