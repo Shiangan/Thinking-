@@ -73,17 +73,7 @@
         .comments form textarea {
             width: 100%;
             padding: 10px;
-        }
-        .comments form button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            padding: 10px;
-            cursor: pointer;
-        }
-        .comments form button:hover {
-            background-color: #0056b3;
+            margin-bottom: 10px;
         }
         .image-container {
             margin: 20px 0;
@@ -163,10 +153,10 @@
 
         // 設置安靈地點和告別式地點圖片
         const burialLocationImg = document.getElementById('burialLocationImg');
-        burialLocationImg.src = urlParams.get('burialLocation');
+        burialLocationImg.src = urlParams.get('burialLocation') || '';
 
         const farewellLocationImg = document.getElementById('farewellLocationImg');
-        farewellLocationImg.src = urlParams.get('farewellLocation');
+        farewellLocationImg.src = urlParams.get('farewellLocation') || '';
 
         // 設置追思照片輪播
         const photoCarousel = document.getElementById('photoCarousel');
@@ -186,7 +176,7 @@
 
         // 設置背景音樂
         const musicSource = document.getElementById('musicSource');
-        musicSource.src = urlParams.get('music');
+        musicSource.src = urlParams.get('music') || '';
 
         // 留言區功能
         const commentForm = document.getElementById('commentForm');
